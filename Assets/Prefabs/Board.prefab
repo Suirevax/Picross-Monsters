@@ -344,9 +344,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e35d507aaec514fac82a2316954968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rowContainter: {fileID: 2529160781361614564}
-  rowsHintsContainter: {fileID: 2529160781012551609}
-  columnsHintsContainter: {fileID: 2529160781580929064}
+  rowContainer: {fileID: 2529160781361614564}
+  rowsHintsContainer: {fileID: 2529160781012551609}
+  columnsHintsContainer: {fileID: 2529160781580929064}
   victoryPopup: {fileID: 4354936591531107660, guid: 8effe30677ce50846b8eeaadb5385a51, type: 3}
 --- !u!1 &2529160781361614564
 GameObject:
