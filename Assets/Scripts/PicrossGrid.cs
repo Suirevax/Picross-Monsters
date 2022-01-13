@@ -7,28 +7,25 @@ using UnityEngine.UI;
 
 public class PicrossGrid : MonoBehaviour
 {
-    private const int GridSize = 12;
+    public const int GridSize = 12; //max width & height of a monster
     
     private Color[,] _grid = new Color[GridSize,GridSize];
-    public Color[,] _solutionGrid = null;
+    private readonly Field[,] _fieldGrid = new Field[GridSize,GridSize];
+    private readonly TMP_Text[] _rowHintText = new TMP_Text[12];
+    private readonly TMP_Text[] _columnHintText = new TMP_Text[12];
+    private Color[,] _solutionGrid = null;
 
-    [SerializeField] private GameObject rowContainter;
-    [SerializeField] private GameObject rowsHintsContainter;
-    [SerializeField] private GameObject columnsHintsContainter;
-
+    [SerializeField] private GameObject rowContainer;
+    [SerializeField] private GameObject rowsHintsContainer;
+    [SerializeField] private GameObject columnsHintsContainer;
     [SerializeField] private GameObject victoryPopup;
-    
-    private Field[,] _fieldGrid = new Field[GridSize,GridSize];
-    private TMP_Text[] rowHintText = new TMP_Text[12];
-    private TMP_Text[] columnHintText = new TMP_Text[12];
 
-    
-    
     private void Start()
     {
+        //Fill _fieldGrid, _rowHintText, and _columnHintText
         for (var y = 0; y < GridSize; y++)
         {
-            var row = rowContainter.transform.GetChild(y);
+            var row = rowContainer.transform.GetChild(y);
             for (var x = 0; x < GridSize; x++)
             {
                 _fieldGrid[y,x] = row.GetChild(x).GetComponent<Field>();
@@ -37,8 +34,8 @@ public class PicrossGrid : MonoBehaviour
         
         for (var i = 0; i < GridSize; i++)
         {
-            rowHintText[i] = rowsHintsContainter.transform.GetChild(i).GetComponent<TMP_Text>();
-            columnHintText[i] = columnsHintsContainter.transform.GetChild(i).GetComponent<TMP_Text>();
+            _rowHintText[i] = rowsHintsContainer.transform.GetChild(i).GetComponent<TMP_Text>();
+            _columnHintText[i] = columnsHintsContainer.transform.GetChild(i).GetComponent<TMP_Text>();
         }
 
         Field.FieldFlipped += CheckIfSolved;
@@ -60,7 +57,7 @@ public class PicrossGrid : MonoBehaviour
         HandleGridSolved();
     }
 
-    void HandleGridSolved()
+    private void HandleGridSolved()
     {
         for (var y = 0; y < GridSize; y++)
         {
@@ -89,7 +86,7 @@ public class PicrossGrid : MonoBehaviour
                 tmpRow += "0";
             }
 
-            rowHintText[i].text = tmpRow;
+            _rowHintText[i].text = tmpRow;
 
             var tmpColumn = "";
             foreach (var hint in columnsHints[i])
@@ -102,7 +99,7 @@ public class PicrossGrid : MonoBehaviour
                 tmpColumn += "0";
             }
 
-            columnHintText[i].text = tmpColumn;
+            _columnHintText[i].text = tmpColumn;
         }
         
         

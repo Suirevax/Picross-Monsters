@@ -11,17 +11,16 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-//https://github.com/Kanawanagasaki/NonogramSolver
 
 public class MonstersAPI : MonoBehaviour
 {
-    [DllImport("C:\\Users\\rxpja\\source\\repos\\picross-solver-dll\\x64\\Debug\\picross-solver-dll.dll")]
+    [DllImport("Assets\\Plugins\\picross-solver-dll.dll")]
     private static extern int Solutions_n(string rowBuffer, string columnBuffer);
 
     private static readonly Uri UriLink = new Uri("https://app.pixelencounter.com/api/basic/monsters/random");
-    private const int GridSize = 12; //max width & height of a monster
+    private const int GridSize = PicrossGrid.GridSize; //max width & height of a monster
 
-    [SerializeField] private PicrossGrid _picrossGrid;
+    [SerializeField] private PicrossGrid picrossGrid;
 
     public async void GETMonster()
     {
@@ -52,7 +51,7 @@ public class MonstersAPI : MonoBehaviour
                 continue;
             }
 
-            _picrossGrid.NewGrid(pixelGrid, rowsHints, columnHints);
+            picrossGrid.NewGrid(pixelGrid, rowsHints, columnHints);
             break;
         }
     }
@@ -86,7 +85,7 @@ public class MonstersAPI : MonoBehaviour
         return null;
     }
 
-    async Task<Color[,]> ResponseToGrid(HttpResponseMessage httpResponseMessage)
+    private static async Task<Color[,]> ResponseToGrid(HttpResponseMessage httpResponseMessage)
     {
         //Parsing to XML DOM
         var settings = new XmlReaderSettings

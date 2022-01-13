@@ -8,13 +8,12 @@ using UnityEngine.UI;
 public class Field : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 {
     private Image _image;
-    public Color solutionColor;
+    public enum FieldState{Disabled, Empty, Filled, Colored}
+    private FieldState _state;
 
     public static event EventHandler FieldFlipped;
 
-    public enum FieldState{Disabled, Empty, Filled, Colored}
-
-    private FieldState _state;
+    public Color solutionColor;
 
     public FieldState State
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PopUp : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         Destroy(gameObject, 5f);
     }
