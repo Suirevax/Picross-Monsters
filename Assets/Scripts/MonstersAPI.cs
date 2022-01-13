@@ -25,53 +25,39 @@ public class MonstersAPI : MonoBehaviour
 
     public async void GETMonster()
     {
-        
-        var httpResponseMessage = await CallAPI();
-        var pixelGrid = await ResponseToGrid(httpResponseMessage);
-
-    
-
-        
-
-        
-
-        //put all pixels in a grid
-  
-
-        LogPixelGrid(pixelGrid);
-
-        Debug.Log("RowHints");
-        var rowsHints = GenerateRowHints(pixelGrid);
-        var rowsString = HintsToString(rowsHints);
-        Debug.Log(rowsString);
-        Debug.Log("ColumnHints");
-        var columnHints = GenerateColumnHints(pixelGrid);
-        var columnsString = HintsToString(columnHints);
-        Debug.Log((columnsString));
-
-        
-        /*
-        * Validation method: check that the input grid is valid and has a unique solution.
-        *
-        * Returns a pair composed of an integer code and an error message. The code is as follows:
-        *
-        *  -1  ERR     The input grid is invalid
-        *   0  ZERO    No solution found
-        *   1  OK      Valid grid with a unique solution
-        *   2  MULT    The solution is not unique
-        */
-        
-        var code = Solutions_n(rowsString, columnsString);
-        if (code != 1)
+        while (true)
         {
-            Debug.LogWarning("validation code != 1");
-            return;
-        }
+            var httpResponseMessage = await CallAPI();
+            var pixelGrid = await ResponseToGrid(httpResponseMessage);
 
-        _picrossGrid.NewGrid(pixelGrid, rowsHints, columnHints);
+            var rowsHints = GenerateRowHints(pixelGrid);
+            var rowsString = HintsToString(rowsHints);
+            var columnHints = GenerateColumnHints(pixelGrid);
+            var columnsString = HintsToString(columnHints);
+
+            /*
+            * Validation method: check that the input grid is valid and has a unique solution.
+            *
+            * The code is as follows:
+            *
+            *  -1  ERR     The input grid is invalid
+            *   0  ZERO    No solution found
+            *   1  OK      Valid grid with a unique solution
+            *   2  MULT    The solution is not unique
+            */
+            var code = Solutions_n(rowsString, columnsString);
+            if (code != 1)
+            {
+                Debug.LogWarning("validation code = " + code);
+                continue;
+            }
+
+            _picrossGrid.NewGrid(pixelGrid, rowsHints, columnHints);
+            break;
+        }
     }
 
-    private string HintsToString(List<List<int>> hintsList)
+    private static string HintsToString(List<List<int>> hintsList)
     {
         var tmp = "";
         foreach (var hints in hintsList)
@@ -129,7 +115,7 @@ public class MonstersAPI : MonoBehaviour
     }
     
 
-    private List<List<int>> GenerateRowHints(Color[,] pixelGrid)
+    private static List<List<int>> GenerateRowHints(Color[,] pixelGrid)
     {
         var rowsHints = new List<List<int>>();
         for (var y = 0; y < GridSize; y++)
@@ -154,7 +140,7 @@ public class MonstersAPI : MonoBehaviour
         return rowsHints;
     }
     
-    private List<List<int>> GenerateColumnHints(Color[,] pixelGrid)
+    private static List<List<int>> GenerateColumnHints(Color[,] pixelGrid)
     {
         var rowsHints = new List<List<int>>();
         for (var x = 0; x < GridSize; x++)
@@ -179,7 +165,7 @@ public class MonstersAPI : MonoBehaviour
         return rowsHints;
     }
 
-    void LogPixelGrid(Color[,] pixelGrid)
+    private void LogPixelGrid(Color[,] pixelGrid)
     {
         var text = "[[";
         for (var y = 0; y < GridSize; y++)

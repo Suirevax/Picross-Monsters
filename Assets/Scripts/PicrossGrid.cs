@@ -15,11 +15,15 @@ public class PicrossGrid : MonoBehaviour
     [SerializeField] private GameObject rowContainter;
     [SerializeField] private GameObject rowsHintsContainter;
     [SerializeField] private GameObject columnsHintsContainter;
+
+    [SerializeField] private GameObject victoryPopup;
     
     private Field[,] _fieldGrid = new Field[GridSize,GridSize];
     private TMP_Text[] rowHintText = new TMP_Text[12];
     private TMP_Text[] columnHintText = new TMP_Text[12];
 
+    
+    
     private void Start()
     {
         for (var y = 0; y < GridSize; y++)
@@ -46,27 +50,27 @@ public class PicrossGrid : MonoBehaviour
         {
             for (var x = 0; x < GridSize; x++)
             {
-                if ((_solutionGrid[y, x].a != 0f) != _fieldGrid[y, x].Filled)
+                if ((_solutionGrid[y, x].a != 0f) != (_fieldGrid[y, x].State == Field.FieldState.Filled))
                 {
-                    Debug.Log(x + "," + y);
+                    //Debug.Log(x + "," + y);
                     return;
                 }
             }
         }
-        //ISsolved
         HandleGridSolved();
     }
 
     void HandleGridSolved()
     {
-        Debug.Log("Solved");
         for (var y = 0; y < GridSize; y++)
         {
             for (var x = 0; x < GridSize; x++)
             {
-                _fieldGrid[y, x].GetComponent<Image>().color = _solutionGrid[y, x];
+                _fieldGrid[y, x].State = Field.FieldState.Colored; //TODO: figure out why this doesn't update in the game view but does update in the inspector
             }
         }
+
+        Instantiate(victoryPopup, transform);
     }
 
     public void NewGrid(Color[,] solutionGrid, List<List<int>> rowsHints, List<List<int>> columnsHints)
@@ -99,6 +103,17 @@ public class PicrossGrid : MonoBehaviour
             }
 
             columnHintText[i].text = tmpColumn;
+        }
+        
+        
+        //Set State of all field to empty & set solution color
+        for (var y = 0; y < GridSize; y++)
+        {
+            for (var x = 0; x < GridSize; x++)
+            {
+                _fieldGrid[y, x].State = Field.FieldState.Empty;
+                _fieldGrid[y, x].solutionColor = _solutionGrid[y,x];
+            }
         }
     }
 }

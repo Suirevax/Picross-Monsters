@@ -7,45 +7,67 @@ using UnityEngine.UI;
 
 public class Field : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 {
-    private Image button;
-    private bool filled;
+    private Image _image;
+    public Color solutionColor;
 
-    public static event EventHandler FieldFlipped; 
-    
-    public bool Filled
+    public static event EventHandler FieldFlipped;
+
+    public enum FieldState{Disabled, Empty, Filled, Colored}
+
+    private FieldState _state;
+
+    public FieldState State
     {
-        get => filled;
+        get => _state;
         set
         {
-            button.color = value ? Color.black : Color.white;
-            filled = value;
-            FieldFlipped?.Invoke(this, EventArgs.Empty);
+            _state = value;
+            switch (value)
+            {
+                case FieldState.Disabled:
+                    _image.color = Color.grey;
+                    break;
+                case FieldState.Empty:
+                    _image.color = Color.white;
+                    FieldFlipped?.Invoke(this, EventArgs.Empty); //TODO: right now at the start of game the solution gets checked many many times
+                    break;
+                case FieldState.Filled:
+                    _image.color = Color.black;
+                    FieldFlipped?.Invoke(this, EventArgs.Empty);
+                    break;
+                case FieldState.Colored:
+                    _image.color = solutionColor; //TODO: changes the color in editor but doesn't change color in game view??
+                    break;
+            }
         }
     }
 
     private void Start()
     {
-        button = GetComponent<Image>();
-        filled = false;
+        _image = GetComponent<Image>();
+        State = FieldState.Disabled;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Filled = !Filled;
+        HandleUserInput();
     }
-
-
+    
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (Input.GetMouseButton(0))
+        HandleUserInput();
+    }
+
+    private void HandleUserInput()
+    {
+        switch (State)
         {
-            Filled = true;
-        }else if (Input.GetMouseButton(1))
-        {
-            Filled = false;
-        }else if (Input.GetMouseButton(2))
-        {
-            
+            case FieldState.Empty:
+                if (Input.GetMouseButton(0)) State = FieldState.Filled;
+                break;
+            case FieldState.Filled:
+                if (Input.GetMouseButton(1)) State = FieldState.Empty;
+                break;
         }
     }
 }
