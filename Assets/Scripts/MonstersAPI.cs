@@ -22,6 +22,11 @@ public class MonstersAPI : MonoBehaviour
 
     [SerializeField] private PicrossGrid picrossGrid;
 
+    private void Start()
+    {
+        if(!picrossGrid) picrossGrid = GameObject.Find("Grid").GetComponent<PicrossGrid>();
+    }
+
     public async void GETMonster()
     {
         while (true)

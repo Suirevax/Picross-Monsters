@@ -18,10 +18,18 @@ public class PicrossGrid : MonoBehaviour
     [SerializeField] private GameObject rowContainer;
     [SerializeField] private GameObject rowsHintsContainer;
     [SerializeField] private GameObject columnsHintsContainer;
+    [SerializeField] private GameObject PopUpContainer;
     [SerializeField] private GameObject victoryPopup;
 
     private void Start()
     {
+        if(!rowContainer) rowContainer = gameObject;
+        if(!rowsHintsContainer) rowsHintsContainer = GameObject.Find("Rows Hints");
+        if(!columnsHintsContainer) columnsHintsContainer = GameObject.Find("Columns Hints");
+        if(!PopUpContainer) PopUpContainer = GameObject.Find("PopUp Container");
+
+        
+        
         //Fill _fieldGrid, _rowHintText, and _columnHintText
         for (var y = 0; y < GridSize; y++)
         {
@@ -63,11 +71,11 @@ public class PicrossGrid : MonoBehaviour
         {
             for (var x = 0; x < GridSize; x++)
             {
-                _fieldGrid[y, x].State = Field.FieldState.Colored; //TODO: figure out why this doesn't update in the game view but does update in the inspector
+                _fieldGrid[y, x].State = Field.FieldState.Colored; 
             }
         }
 
-        Instantiate(victoryPopup, transform);
+        Instantiate(victoryPopup, PopUpContainer.transform);
     }
 
     public void NewGrid(Color[,] solutionGrid, List<List<int>> rowsHints, List<List<int>> columnsHints)

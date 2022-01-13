@@ -35,7 +35,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                     FieldFlipped?.Invoke(this, EventArgs.Empty);
                     break;
                 case FieldState.Colored:
-                    _image.color = solutionColor; //TODO: changes the color in editor but doesn't change color in game view??
+                    _image.color = new Color(solutionColor.r / 255, solutionColor.g / 255, solutionColor.b / 255, solutionColor.a); //TODO: changes the color in editor but doesn't change color in game view??
                     break;
             }
         }
